@@ -1,0 +1,80 @@
+package com.mumy.basicboard.repository;
+
+import com.mumy.basicboard.config.JpaConfig;
+import com.mumy.basicboard.domain.Article;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
+
+@DisplayName("JPA 연결 테스트")
+@Import(JpaConfig.class) //JpaConfig는 내가 만든 환경설정 이므로 테스트 클래스는 인식을 못하기 때문에 Import를 사용해야함
+@DataJpaTest
+class JpaRepositoryTest {
+
+    private final ArticleRepository articleRepository;
+    private final ArticleCommentRepository articleCommentRepository;
+
+    public JpaRepositoryTest(
+            @Autowired ArticleRepository articleRepository,
+            @Autowired ArticleCommentRepository articleCommentRepository
+    ) {
+        this.articleRepository = articleRepository;
+        this.articleCommentRepository = articleCommentRepository;
+    }
+
+    @DisplayName("select 테스트")
+    @Test
+    void givenTestData_whenSelecting_thenWorksFine() {
+        List<Article> articles = articleRepository.findAll();
+
+        assertThat(articles).isNotNull().hasSize(123);
+    }
+
+    @DisplayName("insert 테스트")
+    @Test
+    void givenTestData_whenInserting_thenWorksFine() {
+
+        long previousCount = articleRepository.count();
+
+        Article savedArticle = articleRepository.save(Article.of("new article", "new content", "#spring"));
+
+        assertThat(articleRepository.count()).isEqualTo(previousCount + 1);
+    }
+
+    @DisplayName("update 테스트")
+    @Test
+    void givenTestData_whenUpdating_thenWorksFine() {
+
+        Article article = articleRepository.findById(1L).orElseThrow();
+        String updateHashtag = "#springboot";
+        article.setHashtag(updateHashtag);
+
+        Article savedArticle = articleRepository.saveAndFlush(article);
+
+        assertThat(savedArticle).hasFieldOrPropertyWithValue("hashtag", updateHashtag);
+    }
+
+    @Test
+    @DisplayName("delete 테스트")
+    void givenTestData_whendeleting_thenWorksFine() {
+
+        Article article = articleRepository.findById(1L).orElseThrow();
+        long previousArticleCount = articleRepository.count();
+        long previousArticleCommentCount = articleCommentRepository.count();
+        int deletedCommentsSize = article.getArticleComments().size();
+
+        articleRepository.delete(article);
+
+        assertThat(articleRepository.count()).isEqualTo(previousArticleCount - 1);
+        assertThat(articleCommentRepository.count()).isEqualTo(previousArticleCommentCount - deletedCommentsSize);
+    }
+
+
+}
