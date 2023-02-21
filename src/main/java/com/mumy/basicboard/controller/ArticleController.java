@@ -21,7 +21,7 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String article(@PathVariable("articleId") Long articleId, ModelMap map) {
-        map.addAttribute("article", null);
+        map.addAttribute("article", " ");
         map.addAttribute("articleComments", List.of());
         return "articles/detail";
     }
