@@ -177,6 +177,9 @@ Thumbs.db:encryptable
 ehthumbs.db
 ehthumbs_vista.db
 
+### JPA BUDDY
+.jpb/*
+
 # Dump file
 *.stackdump
 
