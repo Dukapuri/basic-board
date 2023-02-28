@@ -3,7 +3,7 @@ package com.mumy.basicboard.service;
 import com.mumy.basicboard.domain.Article;
 import com.mumy.basicboard.domain.type.SearchType;
 import com.mumy.basicboard.dto.ArticleDto;
-import com.mumy.basicboard.dto.ArticleWithCommentDto;
+import com.mumy.basicboard.dto.ArticleWithCommentsDto;
 import com.mumy.basicboard.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +42,9 @@ public class ArticleService {
         return null;
     }
 
-    public ArticleWithCommentDto getArticle(Long articleId) {
+    public ArticleWithCommentsDto getArticle(Long articleId) {
         return articleRepository.findById(articleId)
-                .map(ArticleWithCommentDto::from)
+                .map(ArticleWithCommentsDto::from)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다 - articleId: " + articleId));
     }
     public void saveArticle(ArticleDto dto) {

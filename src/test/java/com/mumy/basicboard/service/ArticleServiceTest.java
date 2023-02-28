@@ -4,7 +4,7 @@ import com.mumy.basicboard.domain.Article;
 import com.mumy.basicboard.domain.UserAccount;
 import com.mumy.basicboard.domain.type.SearchType;
 import com.mumy.basicboard.dto.ArticleDto;
-import com.mumy.basicboard.dto.ArticleWithCommentDto;
+import com.mumy.basicboard.dto.ArticleWithCommentsDto;
 import com.mumy.basicboard.dto.UserAccountDto;
 import com.mumy.basicboard.repository.ArticleRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -74,7 +74,7 @@ class ArticleServiceTest {
         given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
 
         // When
-        ArticleWithCommentDto dto = sut.getArticle(articleId);
+        ArticleWithCommentsDto dto = sut.getArticle(articleId);
 
         // Then
         assertThat(dto)
