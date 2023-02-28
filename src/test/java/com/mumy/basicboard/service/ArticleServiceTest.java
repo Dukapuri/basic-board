@@ -4,7 +4,7 @@ import com.mumy.basicboard.domain.Article;
 import com.mumy.basicboard.domain.UserAccount;
 import com.mumy.basicboard.domain.type.SearchType;
 import com.mumy.basicboard.dto.ArticleDto;
-import com.mumy.basicboard.dto.ArticleWithCommentsDto;
+import com.mumy.basicboard.dto.ArticleWithCommentDto;
 import com.mumy.basicboard.dto.UserAccountDto;
 import com.mumy.basicboard.repository.ArticleRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -55,14 +55,14 @@ class ArticleServiceTest {
         SearchType searchType = SearchType.TITLE;
         String searchKeyword = "title";
         Pageable pageable = Pageable.ofSize(20);
-        given(articleRepository.findByTitle(searchKeyword, pageable)).willReturn(Page.empty());
+        given(articleRepository.findByTitleContaining(searchKeyword, pageable)).willReturn(Page.empty());
 
         // When
         Page<ArticleDto> articles = sut.searchArticles(searchType, searchKeyword, pageable);
 
         // Then
         assertThat(articles).isEmpty();
-        then(articleRepository).should().findByTitle(searchKeyword, pageable);
+        then(articleRepository).should().findByTitleContaining(searchKeyword, pageable);
     }
 
     @DisplayName("게시글을 조회하면, 게시글을 반환한다.")
@@ -74,7 +74,7 @@ class ArticleServiceTest {
         given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
 
         // When
-        ArticleWithCommentsDto dto = sut.getArticle(articleId);
+        ArticleWithCommentDto dto = sut.getArticle(articleId);
 
         // Then
         assertThat(dto)
