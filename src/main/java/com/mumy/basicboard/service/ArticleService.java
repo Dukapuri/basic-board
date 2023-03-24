@@ -80,7 +80,7 @@ public class ArticleService {
         return articleRepository.findByHashtag(hashtag, pageable).map(ArticleDto::from);
 
     }
-    
+
     public List<String> getHashtags() {
         return articleRepository.findAllDistinctHashtags();
     }
