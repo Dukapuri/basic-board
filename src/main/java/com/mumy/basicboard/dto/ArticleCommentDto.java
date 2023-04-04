@@ -2,6 +2,7 @@ package com.mumy.basicboard.dto;
 
 import com.mumy.basicboard.domain.Article;
 import com.mumy.basicboard.domain.ArticleComment;
+import com.mumy.basicboard.domain.UserAccount;
 import com.mumy.basicboard.dto.UserAccountDto;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,10 @@ public record ArticleCommentDto(
         return new ArticleCommentDto(id, articleId, userAccountDto, content, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
+    public static ArticleCommentDto of(Long articleId, UserAccountDto userAccountDto, String content) {
+        return new ArticleCommentDto(null, articleId, userAccountDto, content, null, null, null, null);
+    }
+
     public static ArticleCommentDto from(ArticleComment entity) {
         return new ArticleCommentDto(
                 entity.getId(),
@@ -33,10 +38,10 @@ public record ArticleCommentDto(
         );
     }
 
-    public ArticleComment toEntity(Article entity) {
+    public ArticleComment toEntity(Article entity, UserAccount userAccount) {
         return ArticleComment.of(
                 entity,
-                userAccountDto.toEntity(),
+                userAccount,
                 content
         );
     }
