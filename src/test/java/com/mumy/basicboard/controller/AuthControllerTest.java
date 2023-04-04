@@ -13,12 +13,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("View 컨트롤러 - 인증")
-@WebMvcTest
+@WebMvcTest()
 public class AuthControllerTest {
 
     private final MockMvc mvc;
+
     @MockBean
     ArticleController articleController;
+    @MockBean
+    ArticleCommentController articleCommentController;
 
     public AuthControllerTest(@Autowired MockMvc mvc) {this.mvc = mvc;}
 

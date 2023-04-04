@@ -45,6 +45,7 @@ public class ArticleController {
     public String article(@PathVariable("articleId") Long articleId, ModelMap map) {
 
         ArticleWithCommentsResponse article = ArticleWithCommentsResponse.from(articleService.getArticleWithComments(articleId));
+        map.addAttribute("totalCount", articleService.getArticleCount());
         map.addAttribute("article", article);
         map.addAttribute("articleComments", article.articleCommentResponse());
         return "articles/detail";
