@@ -3,8 +3,10 @@ package com.mumy.basicboard.controller;
 import com.mumy.basicboard.dto.UserAccountDto;
 import com.mumy.basicboard.dto.request.ArticleCommentRequest;
 import com.mumy.basicboard.dto.request.ArticleRequest;
+import com.mumy.basicboard.dto.security.BoardPrincipal;
 import com.mumy.basicboard.service.ArticleCommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,20 +21,20 @@ public class ArticleCommentController {
     private final ArticleCommentService articleCommentService;
 
     @PostMapping ("/new")
-    public String postNewArticleComment(ArticleCommentRequest articleCommentRequest) {
+    public String postNewArticleComment(ArticleCommentRequest articleCommentRequest,
+                                        @AuthenticationPrincipal BoardPrincipal boardPrincipal) {
 
-        // TODO: 인증 정보를 넣어줘야 한다.
-        articleCommentService.saveArticleComment(articleCommentRequest.toDto(UserAccountDto.of(
-                "sun","pw","sun@mail.com",null,null
-        )));
+
+        articleCommentService.saveArticleComment(articleCommentRequest.toDto(boardPrincipal.toDto()));
 
         return "redirect:/articles/" + articleCommentRequest.articleId();
     }
 
     @PostMapping("/{commentId}/delete")
-    public String deleteArticleComment(@PathVariable Long commentId, Long articleId) {
+    public String deleteArticleComment(@PathVariable Long commentId, Long articleId,
+                                       @AuthenticationPrincipal BoardPrincipal boardPrincipal) {
 
-        articleCommentService.deleteArticleComment(commentId);
+        articleCommentService.deleteArticleComment(commentId, boardPrincipal.getUsername());
         return "redirect:/articles/" + articleId;
 
     }
