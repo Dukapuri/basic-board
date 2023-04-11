@@ -55,7 +55,7 @@ public class ArticleCommentService {
             log.warn("댓글 업데이트 실패. 댓글을 찾을 수 없습니다 - dto = {}", dto);
         }
     }
-    public void deleteArticleComment(long articleCommentId) {
-        articleCommentRepository.deleteById(articleCommentId);
+    public void deleteArticleComment(Long articleCommentId, String userId) {
+        articleCommentRepository.deleteByIdAndUserAccount_UserId(articleCommentId, userId);
     }
 }

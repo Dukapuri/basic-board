@@ -52,7 +52,7 @@
             </attr>
         </attr>
     </attr>
-    <attr sel="#write-article" th:href="@{/articles/form}" />
+    <attr sel="#write-article" th:href="@{/articles/form}" sec:authorize="isAuthenticated()"/>
 
     <attr sel="#pagination">
         <attr sel="li[0]/a"

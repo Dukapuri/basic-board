@@ -1,6 +1,9 @@
 package com.mumy.basicboard.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mumy.basicboard.config.SecurityConfig;
+import com.mumy.basicboard.config.TestSecurityConfig;
+import com.mumy.basicboard.util.FormDataEncoder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +17,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("테스트 도구 - Form 데이터 인코더")
 @Import({FormDataEncoder.class, ObjectMapper.class})
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 class FormDataEncoderTest {
 
     private final FormDataEncoder formDataEncoder;
