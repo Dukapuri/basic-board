@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.mumy'
-version = '0.0.1-SNAPSHOT'
+version = 'v1.1'
 sourceCompatibility = '17'
 
 configurations {
@@ -64,4 +64,11 @@ sourceSets {
 // gradle clean 시에 QClass 디렉토리 삭제
 clean {
     delete file(generated)
+}
+
+//Heroku 설정
+jar {
+    manifest {
+        attributes('Main-Class': 'com.mumy.basicboard.BasicBoardApplication')
+    }
 }
