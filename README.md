@@ -35,7 +35,8 @@ Spring Boot
 * Heroku
 
 ## 데모 페이지
-
+비용 절감을 위해 클라우드 서버가 자동 슬립 모드로 설정되어 있습니다. 링크를 클릭하면 서비스가 깨어납니다. 따라서 첫번째 클릭 반응이 15초 이상으로 다소 늦을 수 있습니다.
+이후에는 비교적 원활하게 서비스를 구경하실 수 있습니다.
 * https://basic-board.herokuapp.com/
 
 ## 질문, 건의
@@ -44,3 +45,8 @@ Spring Boot
 
 * Issues: 버그 리포트, 제안 사항
 * Discussions: 프로젝트와 관련한 논의와 정보
+
+## Reference
+
+* 유즈케이스 다이어그: https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=use-case.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2FDukapuri%2Fbasic-board%2Fmain%2Fdocument%2Fuse-case.svg
+* API EndPoint 구글 시트: https://docs.google.com/spreadsheets/d/1EIj3VUWIBeYk3WAeTe6cz8cZV0EiyHAync_a4otBJrQ/edit?usp=sharing
