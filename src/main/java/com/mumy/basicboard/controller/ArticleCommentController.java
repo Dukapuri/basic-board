@@ -1,14 +1,11 @@
 package com.mumy.basicboard.controller;
 
-import com.mumy.basicboard.dto.UserAccountDto;
 import com.mumy.basicboard.dto.request.ArticleCommentRequest;
-import com.mumy.basicboard.dto.request.ArticleRequest;
 import com.mumy.basicboard.dto.security.BoardPrincipal;
 import com.mumy.basicboard.service.ArticleCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +17,7 @@ public class ArticleCommentController {
 
     private final ArticleCommentService articleCommentService;
 
-    @PostMapping ("/new")
+    @PostMapping("/new")
     public String postNewArticleComment(ArticleCommentRequest articleCommentRequest,
                                         @AuthenticationPrincipal BoardPrincipal boardPrincipal) {
 

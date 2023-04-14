@@ -2,7 +2,6 @@ package com.mumy.basicboard.controller;
 
 import com.mumy.basicboard.domain.constant.FormStatus;
 import com.mumy.basicboard.domain.type.SearchType;
-import com.mumy.basicboard.dto.UserAccountDto;
 import com.mumy.basicboard.dto.request.ArticleRequest;
 import com.mumy.basicboard.dto.response.ArticleResponse;
 import com.mumy.basicboard.dto.response.ArticleWithCommentsResponse;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -78,7 +76,7 @@ public class ArticleController {
         return "articles/form";
     }
 
-    @PostMapping ("/form")
+    @PostMapping("/form")
     public String postNewArticle(ArticleRequest articleRequest,
                                  @AuthenticationPrincipal BoardPrincipal boardPrincipal) {
         articleService.saveArticle(articleRequest.toDto(boardPrincipal.toDto()));
@@ -96,7 +94,7 @@ public class ArticleController {
         return "articles/form";
     }
 
-    @PostMapping ("/{articleId}/form")
+    @PostMapping("/{articleId}/form")
     public String updateArticle(@PathVariable Long articleId, ArticleRequest articleRequest,
                                 @AuthenticationPrincipal BoardPrincipal boardPrincipal) {
         articleService.updateArticle(articleId, articleRequest.toDto(boardPrincipal.toDto()));
