@@ -1,7 +1,6 @@
 package com.mumy.basicboard.controller;
 
 
-import com.mumy.basicboard.config.SecurityConfig;
 import com.mumy.basicboard.config.TestSecurityConfig;
 import com.mumy.basicboard.dto.ArticleCommentDto;
 import com.mumy.basicboard.dto.request.ArticleCommentRequest;
@@ -38,7 +37,7 @@ class ArticleCommentControllerTest {
 
     @MockBean
     private ArticleCommentService articleCommentService;
-    public ArticleCommentControllerTest(
+    ArticleCommentControllerTest(
             @Autowired MockMvc mvc,
             @Autowired FormDataEncoder formDataEncoder
     ) {

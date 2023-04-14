@@ -1,6 +1,5 @@
 package com.mumy.basicboard.controller;
 
-import com.mumy.basicboard.config.SecurityConfig;
 import com.mumy.basicboard.config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ class MainControllerTest {
 
     private final MockMvc mvc;
 
-    public MainControllerTest(@Autowired MockMvc mvc) {
+    MainControllerTest(@Autowired MockMvc mvc) {
         this.mvc = mvc;
     }
     @Test
