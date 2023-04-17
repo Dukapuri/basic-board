@@ -2,6 +2,7 @@ package com.mumy.basicboard.service;
 
 import com.mumy.basicboard.domain.Article;
 import com.mumy.basicboard.domain.ArticleComment;
+import com.mumy.basicboard.domain.Hashtag;
 import com.mumy.basicboard.domain.UserAccount;
 import com.mumy.basicboard.dto.ArticleCommentDto;
 import com.mumy.basicboard.dto.UserAccountDto;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -164,7 +166,7 @@ class ArticleCommentServiceTest {
 
     private ArticleComment createArticleComment(String content) {
         return ArticleComment.of(
-                Article.of(createUserAccount(), "title", "content", "hashtag"),
+                Article.of(createUserAccount(), "title", "content"),
                 createUserAccount(),
                 content
         );
@@ -181,12 +183,19 @@ class ArticleCommentServiceTest {
     }
 
     private Article createArticle() {
-        return Article.of(
+        Article article = Article.of(
                 createUserAccount(),
                 "title",
-                "content",
-                "#java"
+                "content"
         );
+        article.addHashtags(Set.of(createHashtag()));
+
+        return article;
     }
+
+    private Hashtag createHashtag() {
+        return Hashtag.of("java");
+    }
+
 
 }

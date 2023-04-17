@@ -6,6 +6,7 @@ import com.mumy.basicboard.domain.constant.FormStatus;
 import com.mumy.basicboard.domain.type.SearchType;
 import com.mumy.basicboard.dto.ArticleDto;
 import com.mumy.basicboard.dto.ArticleWithCommentsDto;
+import com.mumy.basicboard.dto.HashtagDto;
 import com.mumy.basicboard.dto.UserAccountDto;
 import com.mumy.basicboard.dto.request.ArticleRequest;
 import com.mumy.basicboard.dto.response.ArticleResponse;
@@ -63,6 +64,26 @@ class ArticleControllerTest {
         this.formDataEncoder = formDataEncoder;
     }
 
+    @DisplayName("[view][GET] 게시글 리스트 (게시판) 페이지 - 정상 호출")
+    @Test
+    void givenNothing_whenRequestingArticlesView_thenReturnsArticlesView() throws Exception {
+        // Given
+        given(articleService.searchArticles(eq(null), eq(null), any(Pageable.class))).willReturn(Page.empty());
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4));
+
+        // When & Then
+        mvc.perform(get("/articles"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("articles/index"))
+                .andExpect(model().attributeExists("articles"))
+                .andExpect(model().attributeExists("paginationBarNumbers"))
+                .andExpect(model().attributeExists("searchTypes"))
+                .andExpect(model().attribute("searchTypeHashtag", SearchType.HASHTAG));
+        then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
+        then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
+    }
+
     @DisplayName("[view][GET] 게시글 리스트 (게시판) 페이지 - 검색어와 함께 호출")
     @Test
     void givenSearchKeyword_whenSearchingArticlesView_thenReturnsArticlesView() throws Exception {
@@ -74,7 +95,8 @@ class ArticleControllerTest {
                 .willReturn(Page.empty());
         given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0,1,2,3,4));
         //When & Then
-        mvc.perform(get("/articles")
+        mvc.perform(
+                get("/articles")
                         .queryParam("searchType", searchType.name())
                         .queryParam("searchValue", searchValue)
                 )
@@ -116,7 +138,8 @@ class ArticleControllerTest {
                 .andExpect(view().name("articles/detail"))
                 .andExpect(model().attributeExists("article"))
                 .andExpect(model().attributeExists("articleComments"))
-                .andExpect(model().attribute("totalCount", totalCount));
+                .andExpect(model().attribute("totalCount", totalCount))
+                .andExpect(model().attribute("searchTypeHashtag", SearchType.HASHTAG));
 
         then(articleService).should().getArticleWithComments(articleId);
         then(articleService).should().getArticleCount();
@@ -224,15 +247,15 @@ class ArticleControllerTest {
     @Test
     void givenNewArticleInfo_whenRequesting_thenSavesNewArticle() throws Exception {
         // Given
-        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content", "#new");
+        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content");
         willDoNothing().given(articleService).saveArticle(any(ArticleDto.class));
 
         // When & Then
         mvc.perform(
-                        post("/articles/form")
-                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                .content(formDataEncoder.encode(articleRequest))
-                                .with(csrf())
+                post("/articles/form")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .content(formDataEncoder.encode(articleRequest))
+                        .with(csrf())
 //                                .with(user(BoardPrincipal.of("sun", "qwer1234", null,null,null))) 이렇게 실제 유저를 사용하는 방식도 있음
                 )
                 .andExpect(status().is3xxRedirection())
@@ -244,7 +267,7 @@ class ArticleControllerTest {
     @WithMockUser
     @DisplayName("[view][GET] 게시글 수정 페이지 - 정상 호출, 인증된 사용자")
     @Test
-    void givenNothing_whenRequesting_thenReturnsUpdatedArticlePage() throws Exception {
+    void givenAuthorizedUser_whenRequesting_thenReturnsUpdatedArticlePage() throws Exception {
         // Given
         long articleId = 1L;
         ArticleDto dto = createArticleDto();
@@ -266,15 +289,15 @@ class ArticleControllerTest {
     void givenUpdatedArticleInfo_whenRequesting_thenUpdatesNewArticle() throws Exception {
         // Given
         long articleId = 1L;
-        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content", "#new");
+        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content");
         willDoNothing().given(articleService).updateArticle(eq(articleId), any(ArticleDto.class));
 
         // When & Then
         mvc.perform(
-                        post("/articles/" + articleId + "/form")
-                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                .content(formDataEncoder.encode(articleRequest))
-                                .with(csrf())
+                post("/articles/" + articleId + "/form")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .content(formDataEncoder.encode(articleRequest))
+                        .with(csrf())
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/articles/" + articleId))
@@ -293,9 +316,9 @@ class ArticleControllerTest {
 
         // When & Then
         mvc.perform(
-                        post("/articles/" + articleId + "/delete")
-                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                .with(csrf())
+                post("/articles/" + articleId + "/delete")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .with(csrf())
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/articles"))
@@ -309,7 +332,7 @@ class ArticleControllerTest {
                 createUserAccountDto(),
                 "title",
                 "content",
-                "#java"
+                Set.of(HashtagDto.of("java"))
         );
     }
 
@@ -320,7 +343,7 @@ class ArticleControllerTest {
                 Set.of(),
                 "title",
                 "content",
-                "#java",
+                Set.of(HashtagDto.of("java")),
                 LocalDateTime.now(),
                 "sungtae",
                 LocalDateTime.now(),
